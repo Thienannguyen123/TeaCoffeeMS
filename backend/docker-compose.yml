@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    # Build image từ Dockerfile trong thư mục hiện tại
+    build: .
+    container_name: teacoffeems-backend-dev
+    ports:
+      # Ánh xạ port 5000 của máy bạn vào port 5000 của container
+      # Hãy chắc chắn port này khớp với port trong file .env hoặc code của bạn
+      - "5000:5000"
+    env_file:
+      # Nạp các biến môi trường từ file .env
+      - ./.env
+    # PHẦN QUAN TRỌNG NHẤT: Volumes
+    volumes:
+      - .:/app        # ✔ chạy đúng path
+      - /app/node_modules  # ✔ tránh ghi đè node_modules
