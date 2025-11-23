@@ -416,17 +416,18 @@
         }
 
         /* Mô hình dữ liệu và cách xử lý */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
+        /* Modal mờ nền */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
 
         .modal.active {
             display: flex;
@@ -435,16 +436,17 @@
         }
 
         .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            animation: modalSlideIn 0.3s ease-out;
-        }
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
 
         @keyframes modalSlideIn {
             from {
@@ -458,13 +460,16 @@
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
+}
+    .modal * {
+    box-sizing: border-box;
+}
 
         .close-btn {
             background: none;
@@ -621,6 +626,22 @@
         .toast.warning {
             background: #f59e0b;
         }
+
+.badge-shift {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.btn-sm {
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+
     </style>
 </head>
 <body>
@@ -708,95 +729,132 @@
             </div>
 
             <div id="admin-orders" class="content-area">
-                <div class="card">
-                    <h3>Quản lý đơn hàng</h3>
-                    <div class="table-container" style="margin-top: 20px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Mã đơn</th>
-                                    <th>Bàn số</th>
-                                    <th>Món</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thời gian</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div class="card">
+        <h3>Quản lý đơn hàng</h3>
+
+        <div class="search-box" style="display: flex; gap: 10px; margin-top: 20px; align-items: center;">
+            <input type="text" id="orderSearchInput" class="form-control" placeholder="Nhập mã đơn hàng..." style="width: 200px;">
+            <button class="btn btn-primary" onclick="searchOrder()">Tìm kiếm</button>
+            <button class="btn btn-secondary" onclick="resetOrderSearch()" style="background: #6c757d; color: white;">Làm mới</button>
+        </div>
+        <div class="table-container" style="margin-top: 20px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Bàn số</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
             <div id="admin-revenue" class="content-area">
-                <div class="card">
-                    <h3>Báo cáo doanh thu chi tiết</h3>
-                    
-                    <div class="filter-controls" style="display: flex; gap: 10px; align-items: center; margin: 15px 0;">
-                        <label>Từ:</label>
-                        <input type="date" id="revFrom" class="form-control" style="padding: 5px;">
-                        
-                        <label>Đến:</label>
-                        <input type="date" id="revTo" class="form-control" style="padding: 5px;">
-                        
-                        <button class="btn btn-primary" onclick="loadRevenueReport()">Xem báo cáo</button>
-                    </div>
+    <div class="card">
+        <h3>Báo cáo doanh thu chi tiết</h3>
 
-                    <div style="margin-bottom: 10px; font-weight: bold;">
-                        Kết quả: <span id="totalRevenueSum" style="color: red; font-size: 1.1em;">0 VNĐ</span>
-                    </div>
+        <div class="filter-controls" style="display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap;">
+            <label>Từ:</label>
+            <input type="date" id="revFrom" class="form-control" style="padding: 5px;">
 
-                    <div class="table-container">
-                        <table width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Ngày</th>
-                                    <th>Doanh thu (VNĐ)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="revenueTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <label>Đến:</label>
+            <input type="date" id="revTo" class="form-control" style="padding: 5px;">
 
+            <button class="btn" style="background: #e0e0e0; color: #333;" onclick="filterRevenue('today')">Hôm nay</button>
+            <button class="btn" style="background: #e0e0e0; color: #333;" onclick="filterRevenue('week')">Tuần này</button>
+            <button class="btn" style="background: #e0e0e0; color: #333;" onclick="filterRevenue('month')">Tháng này</button>
+            
+            
+        </div>
+
+        <div style="margin-bottom: 10px; font-weight: bold; font-size: 1.1em;">
+            Tổng doanh thu: <span id="totalRevenueSum" style="color: red;">0 VNĐ</span>
+        </div>
+
+        <div class="table-container">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Doanh thu (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody id="revenueTableBody"></tbody>
+            </table>
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
+
+        <h3>Top sản phẩm bán chạy</h3>
+        <div class="table-container">
+            <table width="100%">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th>Tên món</th>
+                        <th>Loại</th>
+                        <th>Số lượng bán</th>
+                        <th>Đơn giá hiện tại</th>
+                    </tr>
+                </thead>
+                <tbody id="topProductsBody">
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
             <div id="admin-attendance" class="content-area">
-                <div class="card">
-                    <h3>Điểm danh nhân viên</h3>
-                    <div class="form-row" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;">
-                        <select id="shiftEmployee" class="form-control">
-                            <option value="">Chọn nhân viên...</option>
-                        </select>
-                        <input type="date" id="shiftDate" class="form-control">
-                        
-                        <select id="shiftName" class="form-control">
-                            <option value="Ca Sáng">Ca Sáng (7h-12h)</option>
-                            <option value="Ca Chiều">Ca Chiều (12h-18h)</option>
-                            <option value="Ca Tối">Ca Tối (18h-23h)</option>
-                        </select>
-                        
-                        <button class="btn btn-primary" onclick="assignShift()">Xếp Ca</button>
-                    </div>
-                    <div class="table-container" style="margin-top: 20px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nhân viên</th>
-                                    <th>Chức vụ</th>
-                                    <th>Ngày</th>
-                                    <th>Giờ vào</th>
-                                    <th>Giờ ra</th>
-                                    <th>Tổng giờ</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendanceTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
+    
+    <div class="card">
+        <h3>Theo dõi chấm công & Vi phạm</h3>
+        
+        <div class="filter-controls" style="display: flex; gap: 10px; align-items: center; margin: 20px 0; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+            <div style="flex: 1;">
+                <label style="font-weight: bold; font-size: 12px;">Chọn nhân viên:</label>
+                <select id="filterEmployee" class="form-control" onchange="loadAttendanceReport()">
+                    <option value="all">-- Tất cả nhân viên --</option>
+                </select>
             </div>
+            
+            <div style="flex: 1;">
+                <label style="font-weight: bold; font-size: 12px;">Từ ngày:</label>
+                <input type="date" id="filterFromDate" class="form-control" onchange="loadAttendanceReport()">
+            </div>
+
+            <div style="flex: 1;">
+                <label style="font-weight: bold; font-size: 12px;">Đến ngày:</label>
+                <input type="date" id="filterToDate" class="form-control" onchange="loadAttendanceReport()">
+            </div>
+            
+            <div style="align-self: flex-end;">
+                 <button class="btn btn-primary" onclick="loadAttendanceReport()"><i class="fas fa-search"></i> Xem báo cáo</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Nhân viên</th>
+                        <th>Ca làm</th>
+                        <th>Giờ vào (Thực tế)</th>
+                        <th>Giờ ra (Thực tế)</th>
+                        <th>Đánh giá / Vi phạm</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceReportBody">
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
 
             <div id="admin-leaves" class="content-area">
                 <div class="card">
@@ -848,6 +906,12 @@
                 <button class="nav-tab" onclick="showStaffContent('menu', this)"> Thực đơn</button>
                 <button class="nav-tab" onclick="showStaffContent('shifts', this)"> Ca làm việc</button>
                 <button class="nav-tab" onclick="showStaffContent('leaves', this)"> Nghỉ phép</button>
+                <button class="nav-tab" onclick="showChangePasswordModal()">Đổi mật khẩu</button>
+                <button id="navAttendanceBtn" class="nav-tab" 
+            onclick="handleNavAttendanceClick()" 
+            style="margin-left: auto; background-color: #2ecc71; color: white; font-weight: bold; border: none;">
+        <i class="fas fa-clock"></i> Đang tải...
+    </button>
             </div>
 
             <div id="staff-orders" class="content-area active">
@@ -857,7 +921,6 @@
                         <select class="form-control" id="orderTable">
                             <option value="">Chọn bàn</option>
                             </select>
-                        <input type="text" class="form-control" placeholder="Tên khách hàng" id="customerName">
                     </div>
                     
                     <h4 style="margin: 20px 0 10px 0;">Chọn món:</h4>
@@ -882,7 +945,6 @@
                             <thead>
                                 <tr>
                                     <th>Bàn</th>
-                                    <th>Khách hàng</th>
                                     <th>Món</th>
                                     <th>Tổng tiền</th>
                                     <th>Thao tác</th>
@@ -971,31 +1033,73 @@
             </div>
         </div>
     </div>
+    
+
+    <!-- Modal đổi mật khẩu -->
+<div id="changePasswordModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeChangePasswordModal()">&times;</span>
+    <h3>Đổi mật khẩu</h3>
+    <form id="changePasswordForm" onsubmit="event.preventDefault(); changePassword();">
+      <div>
+        <label>Mật khẩu cũ</label>
+        <input type="password" id="oldPassword" required />
+      </div>
+      <div>
+        <label>Mật khẩu mới</label>
+        <input type="password" id="newPassword" required />
+      </div>
+      <div>
+        <label>Nhập lại mật khẩu mới</label>
+        <input type="password" id="confirmPassword" required />
+      </div>
+      <button type="submit">Xác nhận</button>
+    </form>
+  </div>
+</div>
+
+
+
 
     <div id="addProductModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Thêm sản phẩm mới</h3>
-                <button class="close-btn" onclick="closeModal('addProductModal')">&times;</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Thêm sản phẩm mới</h3>
+            <button class="close-btn" onclick="closeModal('addProductModal')">&times;</button>
+        </div>
+
+        <div class="form-row">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="productName" style="font-weight: bold; display: block; margin-bottom: 5px;">Tên sản phẩm</label>
+                <input type="text" class="form-control" placeholder="Nhập tên sản phẩm" id="productName" style="width: 100%;">
             </div>
-            <div class="form-row">
-                <input type="text" class="form-control" placeholder="Tên sản phẩm" id="productName">
-                <select class="form-control" id="productCategory">
-                    <option>Chọn loại</option>
+            <div style="flex: 1;">
+                <label for="productCategory" style="font-weight: bold; display: block; margin-bottom: 5px;">Loại sản phẩm</label>
+                <select class="form-control" id="productCategory" style="width: 100%;">
+                    <option value="">-- Chọn loại --</option>
                     <option value="DoUong">Đồ uống</option>
                     <option value="ThucAn">Thức ăn</option>
                 </select>
             </div>
-            <div class="form-row">
-                <input type="number" class="form-control" placeholder="Giá (VNĐ)" id="productPrice">
-                <select class="form-control" id="productStatus">
+        </div>
+
+        <div class="form-row">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="productPrice" style="font-weight: bold; display: block; margin-bottom: 5px;">Giá bán (VNĐ)</label>
+                <input type="number" class="form-control" placeholder="Nhập giá bán" id="productPrice" style="width: 100%;">
+            </div>
+            <div style="flex: 1;">
+                <label for="productStatus" style="font-weight: bold; display: block; margin-bottom: 5px;">Trạng thái</label>
+                <select class="form-control" id="productStatus" style="width: 100%;">
                     <option value="active">Hoạt động</option>
                     <option value="inactive">Ngưng bán</option>
                 </select>
             </div>
-            <button class="btn btn-success" onclick="addProduct()">Thêm sản phẩm</button>
         </div>
+
+        <button class="btn btn-success" onclick="addProduct()" style="margin-top: 15px;">Thêm sản phẩm</button>
     </div>
+</div>
 
     <div id="orderDetailModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
@@ -1042,40 +1146,61 @@
     </div>
 
     <div id="addStaffModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Thêm nhân viên mới</h3>
-                <button class="close-btn" onclick="closeModal('addStaffModal')">&times;</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Thêm nhân viên mới</h3>
+            <button class="close-btn" onclick="closeModal('addStaffModal')">&times;</button>
+        </div>
+        
+        <div class="form-row">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="staffName" style="font-weight: bold; display: block; margin-bottom: 5px;">Họ và tên</label>
+                <input type="text" class="form-control" placeholder="Nhập họ tên" id="staffName" style="width: 100%;">
             </div>
-            <div class="form-row">
-                <input type="text" class="form-control" placeholder="Họ và tên" id="staffName">
-                <select class="form-control" id="staffRole">
-                    <option>Chọn chức vụ</option>              
+            <div style="flex: 1;">
+                <label for="staffRole" style="font-weight: bold; display: block; margin-bottom: 5px;">Chức vụ</label>
+                <select class="form-control" id="staffRole" style="width: 100%;">
+                    <option value="">-- Chọn chức vụ --</option>
                     <option value="NhanVien">Nhân viên</option>
                     <option value="QuanLy">Quản lý</option>
                 </select>
             </div>
-            <div class="form-row">
-                <input type="email" class="form-control" placeholder="Email" id="staffEmail">
-                <input type="tel" class="form-control" placeholder="Số điện thoại" id="staffPhone">
-            </div>
-            <button class="btn btn-success" onclick="addStaff()">Thêm nhân viên</button>
         </div>
+
+        <div class="form-row">
+            <div style="flex: 1;">
+                <label for="staffEmail" style="font-weight: bold; display: block; margin-bottom: 5px;">Email/Tài khoản</label>
+                <input type="email" class="form-control" placeholder="Nhập email" id="staffEmail" style="width: 100%;">
+            </div>
+        </div>
+
+        <div class="form-row">
+             <div style="flex: 1;">
+                <label for="staffShift" style="font-weight: bold; display: block; margin-bottom: 5px;">Ca làm việc</label>
+                <select class="form-control" id="staffShift" style="width: 100%;">
+                    <option value="Ca sáng">Ca sáng</option>
+                    <option value="Ca chiều">Ca chiều</option>
+                    <option value="Ca tối">Ca tối</option>
+                 </select>
+             </div>
+        </div>
+
+        <button class="btn btn-success" onclick="addStaff()" style="margin-top: 15px;">Thêm nhân viên</button>
     </div>
+</div>
 
     <div id="addTableModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Thêm bàn mới</h3>
-                <button class="close-btn" onclick="closeModal('addTableModal')">&times;</button>
-            </div>
-            <div class="form-row">
-                <input type="text" class="form-control" placeholder="Tên bàn" id="tableName">
-                <input type="number" class="form-control" placeholder="Số chỗ ngồi" id="tableSeats">
-            </div>
-            <button class="btn btn-success" onclick="addTable()">Thêm bàn</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Thêm bàn mới</h3>
+            <button class="close-btn" onclick="closeModal('addTableModal')">&times;</button>
         </div>
+        <div class="form-row">
+            <input type="text" class="form-control" placeholder="Tên bàn" id="tableName" style="width: 100%;">
+        </div>
+        <button class="btn btn-success" onclick="addTable()">Thêm bàn</button>
     </div>
+</div>
 
     <div id="editAttendanceModal" class="modal">
         <div class="modal-content">
@@ -1107,34 +1232,49 @@
     </div>
 
     <div id="editStaffModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Sửa thông tin nhân viên</h3>
-                <button class="close-btn" onclick="closeModal('editStaffModal')">&times;</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Sửa thông tin nhân viên</h3>
+            <button class="close-btn" onclick="closeModal('editStaffModal')">&times;</button>
+        </div>
+        <input type="hidden" id="editStaffId">
+        
+        <div class="form-row">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="editStaffName" style="font-weight: bold; display: block; margin-bottom: 5px;">Họ và tên</label>
+                <input type="text" class="form-control" placeholder="Họ và tên" id="editStaffName" style="width: 100%;">
             </div>
-            <input type="hidden" id="editStaffId">
-            
-            <div class="form-row">
-                <input type="text" class="form-control" placeholder="Họ và tên" id="editStaffName">
-                <select class="form-control" id="editStaffRole">
+
+            <div style="flex: 1;">
+                <label for="editStaffRole" style="font-weight: bold; display: block; margin-bottom: 5px;">Vai trò</label>
+                <select class="form-control" id="editStaffRole" style="width: 100%;">
                     <option value="NhanVien">Nhân viên</option>
                     <option value="QuanLy">Quản lý</option>
                 </select>
             </div>
-            <div class="form-row">
-                <input type="email" class="form-control" placeholder="Email/Tài khoản" id="editStaffEmail">
-                <input type="password" class="form-control" placeholder="Mật khẩu mới (nếu muốn đổi)" id="editStaffPassword">
+        </div>
+
+        <div class="form-row">
+            <div style="flex: 1;">
+                <label for="editStaffEmail" style="font-weight: bold; display: block; margin-bottom: 5px;">Email/Tài khoản</label>
+                <input type="email" class="form-control" placeholder="Email/Tài khoản" id="editStaffEmail" style="width: 100%;">
             </div>
-            <div class="form-row">
-                 <select class="form-control" id="editStaffShift">
+        </div>
+
+        <div class="form-row">
+             <div style="flex: 1;">
+                <label for="editStaffShift" style="font-weight: bold; display: block; margin-bottom: 5px;">Ca làm việc</label>
+                <select class="form-control" id="editStaffShift" style="width: 100%;">
                     <option value="Ca sáng">Ca sáng</option>
                     <option value="Ca chiều">Ca chiều</option>
                     <option value="Ca tối">Ca tối</option>
                  </select>
-            </div>
-            <button class="btn btn-success" onclick="handleUpdateStaff()">Cập nhật</button>
+             </div>
         </div>
+
+        <button class="btn btn-success" onclick="handleUpdateStaff()" style="margin-top: 15px;">Cập nhật</button>
     </div>
+</div>
 
     <script>
     // Biến toàn cục
@@ -1321,9 +1461,15 @@
                 // loadRevenueReport(); // Gọi khi cần xem báo cáo
                 break;
             case 'attendance':
-                loadAttendance();
-                loadEmployeesForShiftDropdown();
-                break;
+            // Gọi hàm tải bộ lọc nhân viên
+            if (typeof loadEmployeeFilter === 'function') {
+                loadEmployeeFilter();
+            }
+            // Gọi hàm tải báo cáo chấm công
+            if (typeof loadAttendanceReport === 'function') {
+                loadAttendanceReport();
+            }
+            break;
             case 'leaves':
                 loadLeaves();
                 break;
@@ -1379,28 +1525,34 @@
 
     // (Hàm tải dữ liệu) Tải danh sách sản phẩm
     async function loadProducts() {
-        try {
-            const products = await apiCall('/products', 'GET');
-            const tbody = document.getElementById('productsTableBody');
-            tbody.innerHTML = ''; 
+    try {
+        const products = await apiCall('/products', 'GET');
+        const tbody = document.getElementById('productsTableBody');
+        tbody.innerHTML = ''; 
 
-            products.forEach(product => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${product.tenSP}</td>
-                    <td>${product.loai}</td>
-                    <td>${product.gia.toLocaleString()} VNĐ</td>
-                    <td><span class="status-badge status-active">Hoạt động</span></td>
-                    <td>
-                        <button class="btn btn-warning">Sửa</button>
-                        <button class="btn btn-danger">Xóa</button>
-                    </td>
-                `;
-            });
-        } catch (error) {
-            console.error("Lỗi tải sản phẩm:", error);
-        }
+        products.forEach(product => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${product.tenSP}</td>
+                <td>${product.loai}</td>
+                <td>${product.gia.toLocaleString()} VNĐ</td>
+                <td><span class="status-badge status-active">Hoạt động</span></td>
+                <td>
+                    <button class="btn btn-warning btn-edit">Sửa</button>
+                    <button class="btn btn-danger btn-delete">Xóa</button>
+                </td>
+            `;
+
+            row.querySelector(".btn-edit").addEventListener("click", () => openEditModal(product));
+            row.querySelector(".btn-delete").addEventListener("click", () => deleteProduct(product.maSP));
+        });
+
+    } catch (error) {
+        console.error("Lỗi tải sản phẩm:", error);
     }
+}
+
+
 
     // (Hàm tải dữ liệu) Tải danh sách nhân viên
     async function loadStaff() {
@@ -1423,6 +1575,8 @@
                     <td>
                         <button class="btn btn-warning" onclick='showEditStaffModal(${JSON.stringify(staff)})'>Sửa</button>
                         <button class="btn btn-danger" onclick="deleteStaff(${staff.maNV})">Xóa</button>
+                        <button class="btn btn-secondary" onclick="resetStaffPassword(${staff.maNV})">Đặt lại mật khẩu</button>
+
                     </td>
                 `;
             });
@@ -1438,7 +1592,6 @@
         document.getElementById('editStaffRole').value = staff.vaiTro;
         document.getElementById('editStaffEmail').value = staff.taiKhoan;
         document.getElementById('editStaffShift').value = staff.caLamViec || 'Ca sáng';
-        document.getElementById('editStaffPassword').value = ''; // Reset mật khẩu
 
         document.getElementById('editStaffModal').classList.add('active');
     }
@@ -1490,54 +1643,89 @@
     }
 
     // (Hàm tải dữ liệu) Tải danh sách đơn hàng
-    async function loadOrders() {
-        try {
-            const orders = await apiCall('/orders', 'GET');
-            const tbody = document.getElementById('ordersTableBody');
-            // Sửa lại tiêu đề bảng trong HTML cho khớp với nội dung mới
-            // (Mã đơn, Bàn số, Tổng tiền, Trạng thái, Thao tác)
-            const thead = document.querySelector('#admin-orders table thead tr');
-            thead.innerHTML = `
-                <th>Mã đơn</th>
-                <th>Bàn số</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-            `;
+    // Biến toàn cục để lưu danh sách đơn hàng gốc
+let allOrdersList = [];
 
-            tbody.innerHTML = ''; 
+// 1. Hàm tải đơn hàng từ Server
+async function loadOrders() {
+    try {
+        const orders = await apiCall('/orders', 'GET');
+        
+        // Lưu dữ liệu vào biến toàn cục
+        allOrdersList = orders;
 
-            orders.forEach(order => {
-                const row = tbody.insertRow();
-                
-                let statusBadge = 'status-pending';
-                let statusText = order.trangThai;
-                if (order.trangThai === 'DaThanhToan') {
-                    statusBadge = 'status-active'; // Màu xanh
-                    statusText = 'Đã thanh toán';
-                } else if (order.trangThai === 'Huy') {
-                    statusBadge = 'status-rejected'; // Màu đỏ
-                    statusText = 'Đã hủy';
-                } else {
-                    statusBadge = 'status-warning'; // Màu vàng cho DangXuLy
-                    statusText = 'Đang xử lý';
-                }
+        // Hiển thị toàn bộ danh sách
+        renderOrderTable(allOrdersList);
 
-                // Chỉ hiển thị thông tin gọn nhẹ
-                row.innerHTML = `
-                    <td>#${order.maDH}</td>
-                    <td>Bàn ${order.maBan}</td>
-                    <td style="font-weight: bold;">${order.tongTien.toLocaleString()} VNĐ</td>
-                    <td><span class="status-badge ${statusBadge}">${statusText}</span></td>
-                    <td>
-                        <button class="btn btn-primary" onclick='showOrderDetail(${JSON.stringify(order)})'>Chi tiết</button>
-                    </td>
-                `;
-            });
-        } catch (error) {
-            console.error("Lỗi tải đơn hàng:", error);
-        }
+    } catch (error) {
+        console.error("Lỗi tải đơn hàng:", error);
     }
+}
+
+// 2. Hàm hiển thị bảng (Tách riêng để tái sử dụng khi search)
+function renderOrderTable(orders) {
+    const tbody = document.getElementById('ordersTableBody');
+    tbody.innerHTML = ''; 
+
+    if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không tìm thấy đơn hàng nào</td></tr>';
+        return;
+    }
+
+    orders.forEach(order => {
+        const row = tbody.insertRow();
+        
+        let statusBadge = 'status-pending';
+        let statusText = order.trangThai;
+        if (order.trangThai === 'DaThanhToan') {
+            statusBadge = 'status-active'; 
+            statusText = 'Đã thanh toán';
+        } else if (order.trangThai === 'Huy') {
+            statusBadge = 'status-rejected'; 
+            statusText = 'Đã hủy';
+        } else {
+            statusBadge = 'status-warning'; 
+            statusText = 'Đang xử lý';
+        }
+
+        row.innerHTML = `
+            <td>#${order.maDH}</td>
+            <td>Bàn ${order.maBan}</td>
+            <td style="font-weight: bold;">${order.tongTien.toLocaleString()} VNĐ</td>
+            <td><span class="status-badge ${statusBadge}">${statusText}</span></td>
+            <td>
+                <button class="btn btn-primary" onclick='showOrderDetail(${JSON.stringify(order)})'>Chi tiết</button>
+                
+                <button onclick="downloadInvoiceByOrderId(${order.maDH})" style="padding:5px 10px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; margin-left: 5px;">
+                    In hóa đơn
+                </button>
+            </td>
+        `;
+    });
+}
+
+// 3. Hàm Tìm kiếm
+function searchOrder() {
+    const keyword = document.getElementById('orderSearchInput').value.trim().toLowerCase();
+    
+    if (!keyword) {
+        renderOrderTable(allOrdersList); // Nếu rỗng thì hiện tất cả
+        return;
+    }
+
+    // Lọc danh sách theo Mã đơn (convert sang string để so sánh)
+    const filteredOrders = allOrdersList.filter(order => 
+        order.maDH.toString().includes(keyword)
+    );
+
+    renderOrderTable(filteredOrders);
+}
+
+// 4. Hàm Làm mới (Reset)
+function resetOrderSearch() {
+    document.getElementById('orderSearchInput').value = '';
+    renderOrderTable(allOrdersList);
+}
 
     // (Hàm MỚI: Hiển thị chi tiết trong Modal)
     function showOrderDetail(order) {
@@ -1613,6 +1801,67 @@
         // 5. Mở Modal
         document.getElementById('orderDetailModal').classList.add('active');
     }
+
+function printOrder() {
+    const orderId = document.getElementById('detailOrderId').textContent;
+    const tableName = document.getElementById('detailTableName').textContent;
+    const staffName = document.getElementById('detailStaffName').textContent;
+    const createdTime = document.getElementById('detailCreatedTime').textContent;
+    const paymentTime = document.getElementById('detailPaymentTime').textContent;
+    const status = document.getElementById('detailStatusBadge').textContent;
+    const totalAmount = document.getElementById('detailTotalAmount').textContent;
+
+    const tbody = document.getElementById('detailItemsBody');
+    let itemsText = '';
+    for (let row of tbody.rows) {
+        const cells = row.cells;
+        itemsText += `${cells[0].textContent}\tSL: ${cells[1].textContent}\tĐơn giá: ${cells[2].textContent}\tThành tiền: ${cells[3].textContent}\r\n`;
+    }
+
+    const text = `
+HÓA ĐƠN #${orderId}
+========================
+Bàn: ${tableName}
+Người tạo: ${staffName}
+Ngày tạo: ${createdTime}
+Ngày thanh toán: ${paymentTime}
+Trạng thái: ${status}
+
+Danh sách món:
+${itemsText}
+
+Tổng tiền: ${totalAmount}
+========================
+`;
+
+   // 3. TẠO FILE VÀ TẢI VỀ (Phần thay đổi)
+    
+    // Tạo đối tượng Blob chứa nội dung text
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    
+    // Tạo đường dẫn URL ảo cho blob này
+    const url = window.URL.createObjectURL(blob);
+    
+    // Tạo một thẻ a ẩn để thực hiện việc download
+    const a = document.createElement('a');
+    a.href = url;
+    
+    // Đặt tên file khi tải về (Ví dụ: HoaDon_123.txt)
+    a.download = `HoaDon_${orderId}.txt`;
+    
+    // Thêm thẻ a vào body (cần thiết cho một số trình duyệt như Firefox)
+    document.body.appendChild(a);
+    
+    // Tự động click vào thẻ a
+    a.click();
+    
+    // Dọn dẹp: xóa thẻ a và thu hồi URL để giải phóng bộ nhớ
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
+
+
+
 
     // (Hàm tải dữ liệu) Tải danh sách điểm danh
     async function loadAttendance() {
@@ -1713,41 +1962,52 @@
 
     // (Hàm tải dữ liệu) Tải danh sách bàn
     async function loadTables() {
-        try {
-            const tables = await apiCall('/tables', 'GET');
-            const grid = document.getElementById('adminTableGrid');
-            grid.innerHTML = ''; 
+    try {
+        const tables = await apiCall('/tables', 'GET');
+        const grid = document.getElementById('adminTableGrid');
+        grid.innerHTML = ''; 
 
-            tables.forEach(table => {
-                let statusClass, statusBadge, statusText;
-                if (table.trangThai === 'Trong') {
-                    statusClass = 'dcfce7'; 
-                    statusBadge = 'status-active';
-                    statusText = 'Trống';
-                } else if (table.trangThai === 'DangPhucVu') {
-                    statusClass = 'fee2e2'; 
-                    statusBadge = 'status-rejected';
-                    statusText = 'Có khách';
-                } else { 
-                    statusClass = 'fef3c7'; 
-                    statusBadge = 'status-pending';
-                    statusText = 'Đặt trước';
-                }
+        tables.forEach(table => {
+            let statusClass, statusBadge, statusText;
+            
+            // Logic màu sắc (Giữ nguyên của bạn)
+            if (table.trangThai === 'Trong') {
+                statusClass = 'dcfce7'; statusBadge = 'status-active'; statusText = 'Trống';
+            } else if (table.trangThai === 'DangPhucVu') {
+                statusClass = 'fee2e2'; statusBadge = 'status-rejected'; statusText = 'Có khách';
+            } else { 
+                statusClass = 'fef3c7'; statusBadge = 'status-pending'; statusText = 'Đặt trước';
+            }
 
-                const tableDiv = document.createElement('div');
-                tableDiv.className = 'table-item';
-                tableDiv.style = `background: #${statusClass}; padding: 20px; border-radius: 10px; text-align: center;`;
-                tableDiv.innerHTML = `
-                    <h4>${table.tenBan}</h4>
-                    <p>${table.soGhe || 'N/A'} chỗ</p>
-                    <span class="status-badge ${statusBadge}">${statusText}</span>
-                `;
-                grid.appendChild(tableDiv);
-            });
-        } catch (error) {
-            console.error("Lỗi tải bàn:", error);
-        }
+            const tableDiv = document.createElement('div');
+            tableDiv.className = 'table-item';
+            // Thêm position: relative để căn chỉnh nếu cần
+            tableDiv.style = `background: #${statusClass}; padding: 15px; border-radius: 10px; text-align: center; position: relative;`;
+            
+            tableDiv.innerHTML = `
+                <h4 style="margin-bottom: 5px;">${table.tenBan}</h4>
+                <span class="status-badge ${statusBadge}" style="font-size: 12px;">${statusText}</span>
+                
+                <div style="margin-top: 15px; display: flex; gap: 5px; justify-content: center;">
+                    <button class="btn btn-warning" 
+                        style="padding: 4px 10px; font-size: 12px;" 
+                        onclick="openEditTableModal(${table.maBan}, '${table.tenBan}')">
+                        Sửa
+                    </button>
+
+                    <button class="btn btn-danger" 
+                        style="padding: 4px 10px; font-size: 12px;" 
+                        onclick="deleteTable(${table.maBan})">
+                        Xóa
+                    </button>
+                </div>
+            `;
+            grid.appendChild(tableDiv);
+        });
+    } catch (error) {
+        console.error("Lỗi tải bàn:", error);
     }
+}
 
     // (Hàm tải dữ liệu) Tải danh sách bàn cho nhân viên (vào dropdown)
     async function loadTablesForStaff() {
@@ -1838,43 +2098,59 @@
 
     // (Hàm tải dữ liệu) Tải ca làm việc của nhân viên
     async function loadMyShifts() {
-        try {
-            const myShifts = await apiCall('/shifts/my', 'GET');
-            const tbody = document.getElementById('staffShiftsTableBody');
-            tbody.innerHTML = '';
+    const tbody = document.getElementById('staffShiftsTableBody');
+    
+    // 1. Thêm trạng thái Loading để người dùng biết đang tải
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Đang tải dữ liệu...</td></tr>`;
+
+    try {
+        const myShifts = await apiCall('/shifts/my', 'GET');
+
+        // Kiểm tra dữ liệu rỗng
+        if (!myShifts || myShifts.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Bạn chưa được xếp ca làm việc.</td></tr>`;
+            return;
+        }
+
+        // 2. Sử dụng map() để tạo chuỗi HTML (Tối ưu hiệu suất DOM)
+        const htmlRows = myShifts.map(shift => {
+            const start = new Date(shift.gioBatDau);
+            const end = new Date(shift.gioKetThuc);
+
+            // Format giờ:phút (Ví dụ: 08:00)
+            // Lưu ý: Đã bỏ 'timeZone: UTC' để hiển thị theo giờ máy tính người dùng cho chính xác. 
+            // Nếu backend của bạn lưu giờ UTC chuẩn thì trình duyệt sẽ tự đổi sang giờ VN.
+            const timeOpt = { hour: '2-digit', minute: '2-digit', hour12: false };
+            const gioVao = start.toLocaleTimeString('vi-VN', timeOpt);
+            const gioKetThuc = end.toLocaleTimeString('vi-VN', timeOpt);
             
-            if (myShifts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Bạn chưa được xếp ca làm việc.</td></tr>`;
-                return;
-            }
+            // Format ngày (Ví dụ: 23/11/2025)
+            const ngayLam = new Date(shift.ngayLamViec).toLocaleDateString('vi-VN');
 
-            myShifts.forEach(shift => {
-                const row = tbody.insertRow();
+            // 3. Tính toán thời gian chính xác hơn (Lấy 1 số thập phân, ví dụ 4.5 tiếng)
+            const diffMs = end - start;
+            const diffHours = (diffMs / (1000 * 60 * 60)).toFixed(1); 
 
-                const gioVaoDate = new Date(shift.gioBatDau);
-                const gioKetThucDate = new Date(shift.gioKetThuc);
-                
-                const gioVao = gioVaoDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
-                const gioKetThuc = gioKetThucDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }); 
-
-                const diffMs = gioKetThucDate - gioVaoDate; 
-                const diffHours = diffMs / (1000 * 60 * 60); 
-                const tongGio = `${diffHours.toFixed(0)} tiếng`; 
-
-                row.innerHTML = `
-                    <td>${new Date(shift.ngayLamViec).toLocaleDateString('vi-VN')}</td>
+            return `
+                <tr>
+                    <td>${ngayLam}</td>
                     <td>${shift.tenCa}</td>
                     <td>${gioVao}</td>
                     <td>${gioKetThuc}</td>
-                    <td>${tongGio}</td> 
+                    <td>${diffHours} tiếng</td>
                     <td><span class="status-badge status-active">Đã xếp lịch</span></td>
-                `;
-            });
-        } catch (error) { 
-            console.error("Lỗi tải ca làm việc:", error); 
-            document.getElementById('staffShiftsTableBody').innerHTML = `<tr><td colspan="6" style="text-align: center;">Lỗi tải ca làm việc.</td></tr>`;
-        }
+                </tr>
+            `;
+        }).join(''); // Nối tất cả các dòng lại thành 1 chuỗi
+
+        // 4. Cập nhật DOM 1 lần duy nhất
+        tbody.innerHTML = htmlRows;
+
+    } catch (error) {
+        console.error("Lỗi tải ca làm việc:", error);
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Lỗi tải dữ liệu. Vui lòng thử lại.</td></tr>`;
     }
+}
 
     // (Hàm tải dữ liệu) Tải lịch sử nghỉ phép của nhân viên
     async function loadMyLeaveHistory() {
@@ -1934,7 +2210,7 @@
         const tbody = document.getElementById('paymentTableBody');
         tbody.innerHTML = '';
 
-        // Lọc ra các đơn hàng đang chờ thanh toán (DangXuLy)
+        // Lọc đơn đang chờ thanh toán
         const pendingOrders = orders.filter(o => o.trangThai === 'DangXuLy');
 
         if (pendingOrders.length === 0) {
@@ -1944,73 +2220,140 @@
 
         pendingOrders.forEach(order => {
             const row = tbody.insertRow();
+            
+            // Lấy danh sách món
             const monAn = order.ChiTietDonHangs 
-                ? order.ChiTietDonHangs.map(item => item.SanPham.tenSP).join(', ') 
+                ? order.ChiTietDonHangs.map(item => item.SanPham ? item.SanPham.tenSP : 'Món đã xóa').join(', ') 
                 : '(Chưa có chi tiết)';
 
-            // SỬA LẠI CỘT THAO TÁC: Chỉ còn 2 nút "Đã thanh toán" và "Hủy"
             row.innerHTML = `
                 <td>Bàn ${order.maBan}</td>
-                <td>(Khách lẻ)</td>
+                <td>${order.tenKhachHang || '(Khách lẻ)'}</td>
                 <td>${monAn}</td>
                 <td>${order.tongTien.toLocaleString()} VNĐ</td>
                 <td>
-                    <button class="btn btn-success" onclick="processPayment(${order.maDH})">Đã thanh toán</button>
+                    <button class="btn btn-success" onclick="processPayment(${order.maDH}, ${order.maBan})">Đã thanh toán</button>
+                    
                     <button class="btn btn-danger" onclick="cancelOrder(${order.maDH})">Hủy</button>
                 </td>
             `;
         });
     } catch (error) {
         console.error("Lỗi tải danh sách thanh toán:", error);
-        document.getElementById('paymentTableBody').innerHTML = `<tr><td colspan="5" style="text-align: center;">Lỗi tải dữ liệu.</td></tr>`;
     }
 }
     
-    async function loadRevenueReport() {
-        const fromDate = document.getElementById("revFrom").value;
-        const toDate = document.getElementById("revTo").value;
-        let query = "?type=date";
-        if (fromDate) query += `&from=${fromDate}`;
-        if (toDate) query += `&to=${toDate}`;
+    // 1. Hàm hỗ trợ tính ngày cho các nút bấm
+function filterRevenue(type) {
+    const today = new Date();
+    let fromDate = new Date();
+    let toDate = new Date();
 
-        try {
-            const res = await fetch(`${REPORT_API}/revenue${query}`, {
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+    if (type === 'today') {
+        // Từ hôm nay đến hôm nay
+        fromDate = today;
+        toDate = today;
+    } else if (type === 'week') {
+        // Tuần này: Từ thứ 2 đầu tuần đến hôm nay
+        const day = today.getDay(); // 0 là CN, 1 là T2...
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Điều chỉnh về thứ 2
+        fromDate.setDate(diff);
+        toDate = today;
+    } else if (type === 'month') {
+        // Tháng này: Từ ngày 1 đến hôm nay
+        fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        toDate = today;
+    }
 
-            if (!res.ok) {
-                alert("Lỗi tải báo cáo doanh thu");
-                return;
+    // Format ngày thành YYYY-MM-DD để gán vào input type="date"
+    const formatDate = (date) => date.toISOString().split('T')[0];
+
+    document.getElementById("revFrom").value = formatDate(fromDate);
+    document.getElementById("revTo").value = formatDate(toDate);
+
+    // Tự động tải báo cáo luôn sau khi chọn
+    loadRevenueReport();
+}
+
+// 2. Cập nhật hàm loadRevenueReport
+async function loadRevenueReport() {
+    const fromDate = document.getElementById("revFrom").value;
+    const toDate = document.getElementById("revTo").value;
+    
+    // --- PHẦN 1: TẢI DOANH THU (Code cũ của bạn, giữ nguyên logic) ---
+    let query = "?type=date";
+    if (fromDate) query += `&from=${fromDate}`;
+    if (toDate) query += `&to=${toDate}`;
+
+    try {
+        // Gọi API Doanh thu
+        const resRevenue = await fetch(`${REPORT_API}/revenue${query}`, {
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
+        });
 
-            const data = await res.json();
+        if (resRevenue.ok) {
+            const data = await resRevenue.json();
             const tbody = document.getElementById("revenueTableBody");
             tbody.innerHTML = ""; 
             
             let totalSum = 0;
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; padding: 20px;">Không có dữ liệu</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;">Không có dữ liệu</td></tr>`;
             } else {
                 data.forEach(item => {
                     totalSum += item.doanhThu;
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
-                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.ngay}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">
-                            ${parseInt(item.doanhThu).toLocaleString('vi-VN')} đ
-                        </td>
+                        <td>${item.ngay}</td>
+                        <td style="font-weight: bold;">${parseInt(item.doanhThu).toLocaleString('vi-VN')} đ</td>
                     `;
                     tbody.appendChild(tr);
                 });
             }
             document.getElementById("totalRevenueSum").innerText = totalSum.toLocaleString('vi-VN') + " VNĐ";
-        } catch (err) {
-            console.error("Lỗi report:", err);
         }
+
+        // --- PHẦN 2: TẢI TOP SẢN PHẨM (Code Mới thêm) ---
+        // Tạo query string cho API top products
+        let prodQuery = "?top=10"; // Lấy top 10
+        if (fromDate) prodQuery += `&from=${fromDate}`;
+        if (toDate) prodQuery += `&to=${toDate}`;
+
+        const resProd = await fetch(`${REPORT_API}/top-products${prodQuery}`, {
+             headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+
+        if (resProd.ok) {
+            const products = await resProd.json();
+            const prodBody = document.getElementById("topProductsBody");
+            prodBody.innerHTML = "";
+
+            if (products.length === 0) {
+                 prodBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Không có sản phẩm nào được bán trong khoảng thời gian này</td></tr>`;
+            } else {
+                products.forEach(p => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${p.tenSP}</td>
+                        <td>${p.loai}</td>
+                        <td style="color: blue; font-weight: bold; text-align: center;">${p.soLuongBan}</td>
+                        <td>${parseInt(p.gia).toLocaleString('vi-VN')} đ</td>
+                    `;
+                    prodBody.appendChild(tr);
+                });
+            }
+        }
+
+    } catch (err) {
+        console.error("Lỗi report:", err);
     }
+}
 
     // =========================================================================
     // 4. CÁC HÀM MODAL & XỬ LÝ
@@ -2069,24 +2412,25 @@
             loadStaff(); 
             document.getElementById('staffName').value = '';
             document.getElementById('staffEmail').value = '';
-            document.getElementById('staffPhone').value = '';
         } catch (error) { console.error("Lỗi thêm nhân viên:", error); }
     }
 
     async function addTable() {
         const name = document.getElementById('tableName').value;
-        const seats = document.getElementById('tableSeats').value;
-        if (!name || !seats) {
-            showToast('Vui lòng điền đầy đủ thông tin!', 'error');
-            return;
-        }
+        if (!name) {
+        showToast('Vui lòng điền tên bàn!', 'error');
+        return;
+    }
         try {
-            await apiCall('/tables', 'POST', { tenBan: name, soGhe: parseInt(seats), trangThai: "Trong" }); 
+            await apiCall('/tables', 'POST', { 
+            tenBan: name, 
+            trangThai: "Trong" 
+            // Đã xóa soGhe
+        });
             showToast('Thêm bàn thành công!', 'success');
             closeModal('addTableModal');
             loadTables(); 
             document.getElementById('tableName').value = '';
-            document.getElementById('tableSeats').value = '';
         } catch (error) { console.error("Lỗi thêm bàn:", error); }
     }
 
@@ -2125,39 +2469,68 @@
     }
 
     async function confirmOrder() {
-        const maBan = document.getElementById('orderTable').value;
-        if (!maBan || currentOrder.length === 0) {
-            showToast('Vui lòng chọn bàn và thêm món!', 'error');
-            return;
-        }
-        try {
-            const tongTien = currentOrder.reduce((total, item) => total + (item.gia * item.soLuong), 0);
-            const maNV = CURRENT_USER_INFO.maNV; 
-            const chiTietDonHang = currentOrder.map(item => ({ maSP: item.maSP, soLuong: item.soLuong, ghiChu: "" }));
-            await apiCall('/orders', 'POST', { maNV, maBan: parseInt(maBan), tongTien, trangThai: "DangXuLy", items: chiTietDonHang });
-            showToast('Đơn hàng đã được tạo thành công!', 'success');
-            currentOrder = [];
-            updateOrderSummary();
-            document.getElementById('orderTable').value = '';
-            document.getElementById('customerName').value = '';
-            loadTablesForStaff();
-        } catch (error) { console.error("Lỗi xác nhận đơn hàng:", error); }
+    const maBan = document.getElementById('orderTable').value;
+    if (!maBan || currentOrder.length === 0) {
+        showToast('Vui lòng chọn bàn và thêm món!', 'error');
+        return;
     }
+    try {
+        const tongTien = currentOrder.reduce((total, item) => total + (item.gia * item.soLuong), 0);
+        const maNV = CURRENT_USER_INFO.maNV; 
+        const chiTietDonHang = currentOrder.map(item => ({ maSP: item.maSP, soLuong: item.soLuong, ghiChu: "" }));
+        
+        // 1. Tạo đơn hàng
+        await apiCall('/orders', 'POST', { maNV, maBan: parseInt(maBan), tongTien, trangThai: "DangXuLy", items: chiTietDonHang });
+
+        // --- THÊM ĐOẠN NÀY: Cập nhật trạng thái bàn thành "DangPhucVu" ---
+        await apiCall(`/tables/${maBan}/status`, 'PATCH', { trangThai: 'DangPhucVu' });
+        // ------------------------------------------------------------------
+
+        showToast('Đơn hàng đã được tạo thành công!', 'success');
+        currentOrder = [];
+        updateOrderSummary();
+        document.getElementById('orderTable').value = '';
+        
+        loadTablesForStaff(); // Tải lại dropdown
+        loadTables();         // Tải lại sơ đồ bàn (để thấy bàn chuyển sang màu đỏ)
+
+    } catch (error) { console.error("Lỗi xác nhận đơn hàng:", error); }
+}
 
     // Xử lý khi bấm "Đã thanh toán"
-    async function processPayment(orderId) {
-        try {
-            // Gửi API thanh toán (Mặc định phương thức là TienMat để backend ghi nhận doanh thu)
-            await apiCall('/payments', 'POST', { 
-                maDH: orderId, 
-                phuongThuc: 'TienMat' // Mặc định luôn là Tiền mặt
-            });
-            showToast(`Đã xác nhận thanh toán đơn hàng #${orderId}!`, 'success');
-            loadPayments(); // Tải lại bảng
-        } catch (error) { 
-            console.error("Lỗi khi thanh toán:", error); 
+    // Nhận thêm tham số tableId (mã bàn)
+async function processPayment(orderId, tableId) {
+    if (!confirm("Xác nhận khách đã thanh toán?")) return;
+
+    try {
+        // 1. Cập nhật trạng thái Đơn hàng -> DaThanhToan
+        await apiCall(`/orders/${orderId}`, 'PUT', { 
+            trangThai: 'DaThanhToan' 
+        });
+
+        // 2. Cập nhật trạng thái Bàn -> Trong (QUAN TRỌNG)
+        if (tableId) {
+            await apiCall(`/tables/${tableId}/status`, 'PATCH', { trangThai: 'Trong' });
         }
+
+        // 3. Thông báo & Tải hóa đơn
+        showToast("Thanh toán thành công!", "success");
+        
+        // Nếu bạn có hàm tải hóa đơn thì gọi ở đây
+        if (typeof downloadInvoiceByOrderId === 'function') {
+            await downloadInvoiceByOrderId(orderId);
+        }
+
+        // 4. Cập nhật lại giao diện
+        loadPayments();       // Làm mới bảng thanh toán
+        loadTables();         // Làm mới sơ đồ bàn (Admin)
+        loadTablesForStaff(); // Làm mới dropdown chọn bàn (Nhân viên)
+
+    } catch (error) {
+        console.error("Lỗi thanh toán:", error);
+        showToast("Có lỗi xảy ra khi thanh toán", "error");
     }
+}
 
     // Xử lý khi bấm "Hủy"
     async function cancelOrder(orderId) {
@@ -2315,6 +2688,528 @@
             { theme: "outline", size: "large", text: "signin_with" }
         );
     };
+
+
+
+    
+function showChangePasswordModal() {
+  document.getElementById('changePasswordModal').style.display = 'block';
+}
+
+function closeChangePasswordModal() {
+  document.getElementById('changePasswordModal').style.display = 'none';
+}
+
+async function changePassword() {
+    const oldPassword = document.getElementById("oldPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    try {
+        const res = await apiCall('/users/change-password', 'PUT', {
+            oldPassword,
+            newPassword,
+            confirmPassword
+        });
+
+        showToast("Đổi mật khẩu thành công!", "success");
+        closeChangePasswordModal();
+        
+    } catch (err) {
+        console.error("Lỗi đổi mật khẩu:", err);
+        showToast(err.message, "error");
+    }
+}
+
+function openEditModal(product) {
+    document.getElementById("edit_maSP").value = product.maSP;
+    document.getElementById("edit_tenSP").value = product.tenSP;
+    document.getElementById("edit_loai").value = product.loai;
+    document.getElementById("edit_gia").value = product.gia;
+
+    document.getElementById("editProductModal").classList.add("active");
+}
+
+async function confirmEditProduct() {
+    const id = document.getElementById("edit_maSP").value;
+
+    const body = {
+        tenSP: document.getElementById("edit_tenSP").value,
+        loai: document.getElementById("edit_loai").value,
+        gia: parseFloat(document.getElementById("edit_gia").value)
+    };
+
+    try {
+        await apiCall(`/products/${id}`, 'PUT', body);
+        
+        closeModal('editProductModal'); 
+        loadProducts(); 
+        showToast("Cập nhật sản phẩm thành công!");
+    } catch (err) {
+        console.error("Lỗi cập nhật:", err);
+        showToast("Lỗi cập nhật sản phẩm", "error");
+    }
+}
+
+async function deleteProduct(id) {
+    if (!confirm("Bạn có chắc muốn xoá sản phẩm này?")) return;
+
+    try {
+        await apiCall(`/products/${id}`, 'DELETE');
+
+        showToast("Xóa thành công!");
+        loadProducts(); // reload bảng
+
+    } catch (err) {
+        console.error("Lỗi xóa:", err);
+        showToast("Xóa thất bại!", "error");
+    }
+}
+
+// Hàm hỗ trợ: Tải hóa đơn về máy tính dựa trên ID đơn hàng
+async function downloadInvoiceByOrderId(orderId) {
+    try {
+        // 1. Lấy chi tiết đơn hàng mới nhất từ API để in
+        const order = await apiCall(`/orders/${orderId}`, 'GET');
+        
+        // 2. Chuẩn bị nội dung hóa đơn
+        let itemsText = '';
+        let totalAmount = 0;
+
+        if (order.ChiTietDonHangs && order.ChiTietDonHangs.length > 0) {
+            order.ChiTietDonHangs.forEach(item => {
+                // Tính thành tiền từng món (giả sử item có gia hoặc SanPham.gia)
+                const price = item.SanPham ? item.SanPham.gia : 0; 
+                const amount = price * item.soLuong;
+                totalAmount += amount;
+                
+                const tenSP = item.SanPham ? item.SanPham.tenSP : 'Món không tên';
+                itemsText += `${tenSP}\tSL: ${item.soLuong}\tĐơn giá: ${price.toLocaleString()}\tThành tiền: ${amount.toLocaleString()}\r\n`;
+            });
+        }
+
+        // Format ngày giờ
+        const date = new Date(order.thoiGian || new Date());
+        const dateStr = date.toLocaleString('vi-VN');
+
+        const text = `
+HÓA ĐƠN #${orderId}
+========================
+Bàn: ${order.maBan}
+Ngày tạo: ${dateStr}
+Trạng thái: Đã thanh toán
+
+Danh sách món:
+${itemsText}
+
+------------------------
+TỔNG TIỀN: ${totalAmount.toLocaleString()} VNĐ
+========================
+Cảm ơn quý khách!
+`;
+
+        // 3. Tải file .txt về (Logic Notepad)
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `HoaDon_${orderId}.txt`; // Tên file
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+        console.error("Lỗi khi tải hóa đơn:", err);
+        alert("Thanh toán thành công nhưng lỗi khi tải file hóa đơn.");
+    }
+}
+
+// --- XỬ LÝ XÓA BÀN ---
+async function deleteTable(id) {
+    if (!confirm("Bạn có chắc chắn muốn xóa bàn này không?")) return;
+
+    try {
+        await apiCall(`/tables/${id}`, 'DELETE');
+        showToast("Đã xóa bàn thành công!", "success");
+        loadTables(); // Tải lại giao diện
+    } catch (error) {
+        console.error("Lỗi xóa bàn:", error);
+        showToast("Không thể xóa bàn (có thể đang có đơn hàng?)", "error");
+    }
+}
+
+// --- XỬ LÝ SỬA BÀN ---
+
+// 1. Mở modal và điền dữ liệu cũ
+function openEditTableModal(id, currentName) {
+    document.getElementById('editTableId').value = id;
+    document.getElementById('editTableName').value = currentName;
+    
+    // Mở modal (Giả sử bạn dùng class 'modal' và css display:block khi có class active)
+    document.getElementById('editTableModal').classList.add('active'); 
+    // Hoặc: document.getElementById('editTableModal').style.display = 'block';
+}
+
+// 2. Gọi API cập nhật
+async function handleUpdateTable() {
+    const id = document.getElementById('editTableId').value;
+    const newName = document.getElementById('editTableName').value;
+
+    if (!newName) {
+        showToast("Tên bàn không được để trống", "warning");
+        return;
+    }
+
+    try {
+        // Gọi API PUT
+        await apiCall(`/tables/${id}`, 'PUT', { tenBan: newName });
+        
+        showToast("Cập nhật tên bàn thành công!", "success");
+        closeModal('editTableModal');
+        loadTables(); // Refresh lại danh sách
+    } catch (error) {
+        console.error("Lỗi sửa bàn:", error);
+        showToast("Lỗi cập nhật tên bàn", "error");
+    }
+}
+
+// Biến toàn cục lưu trạng thái: true = đang làm, false = chưa vào ca
+let isShiftActive = false; 
+
+// 1. Hàm xử lý khi bấm nút trên Menu
+async function handleNavAttendanceClick() {
+    if (isShiftActive) {
+        // Nếu đang làm -> Bấm nút sẽ là Tan Ca
+        await handleSelfCheckOut();
+    } else {
+        // Nếu chưa làm -> Bấm nút sẽ là Vào Ca
+        await handleSelfCheckIn();
+    }
+}
+
+// 2. Hàm Vào Ca (Check In)
+async function handleSelfCheckIn() {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    // Logic xác định ca (như cũ)
+    let tenCa = "";
+    if (hour >= 6 && hour < 12) tenCa = "Ca Sáng";
+    else if (hour >= 12 && hour < 18) tenCa = "Ca Chiều";
+    else if (hour >= 18 && hour <= 23) tenCa = "Ca Tối";
+    else {
+        showToast("Hiện tại không thuộc khung giờ làm việc!", "error");
+        return;
+    }
+
+    const maNV = CURRENT_USER_INFO.maNV; 
+    const ngayLamViec = now.toISOString().split('T')[0]; 
+    const gioBatDau = now.toLocaleTimeString('vi-VN', { hour12: false });
+
+    try {
+        await apiCall('/shifts', 'POST', { 
+            maNV, ngayLamViec, tenCa, gioBatDau, gioKetThuc: null 
+        });
+
+        showToast(`Đã vào ${tenCa} lúc ${gioBatDau}`, "success");
+        updateNavButtonState(true); // Chuyển nút sang trạng thái "Tan Ca"
+        
+    } catch (error) {
+        console.error(error);
+        showToast(error.message || "Lỗi điểm danh", "error");
+    }
+}
+
+// 3. Hàm Tan Ca (Check Out)
+async function handleSelfCheckOut() {
+    if(!confirm("Xác nhận kết thúc ca làm việc hiện tại?")) return;
+
+    const now = new Date();
+    const gioKetThuc = now.toLocaleTimeString('vi-VN', { hour12: false });
+
+    try {
+        // 1. Lấy danh sách ca làm việc
+        const myShifts = await apiCall('/shifts/my', 'GET');
+        
+        // 2. Tìm ca đang mở (chưa có giờ kết thúc)
+        const activeShift = myShifts.find(s => !s.gioKetThuc || s.gioKetThuc === null); 
+
+        if (!activeShift) {
+            showToast("Không tìm thấy ca đang mở!", "error");
+            updateNavButtonState(false);
+            return;
+        }
+
+        // 3. LẤY ID CA (Đã sửa: Thêm activeShift.maLich)
+        // Dựa vào log của bạn, tên đúng là 'maLich'
+        const shiftId = activeShift.maLich || activeShift.maCa || activeShift.id;
+
+        if (!shiftId) {
+            showToast("Lỗi code Frontend: Không tìm thấy ID (maLich)", "error");
+            console.error("Object ca làm việc:", activeShift);
+            return;
+        }
+
+        // 4. Gọi API cập nhật
+        await apiCall(`/shifts/${shiftId}`, 'PUT', { gioKetThuc });
+
+        showToast(`Đã tan ca lúc ${gioKetThuc}`, "success");
+        updateNavButtonState(false); // Đổi nút về trạng thái "Vào Ca"
+
+    } catch (error) {
+        console.error("Lỗi check-out:", error);
+        showToast("Lỗi khi tan ca: " + error.message, "error");
+    }
+}
+
+// 4. Hàm cập nhật giao diện nút (Màu sắc & Chữ)
+function updateNavButtonState(isActive) {
+    isShiftActive = isActive;
+    const btn = document.getElementById('navAttendanceBtn');
+    if (!btn) return;
+
+    if (isActive) {
+        // Trạng thái: Đang làm việc -> Hiển thị nút đỏ (Tan ca)
+        btn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Tan Ca';
+        btn.style.backgroundColor = '#e74c3c'; // Màu đỏ
+        btn.title = "Bấm để kết thúc ca làm việc";
+    } else {
+        // Trạng thái: Chưa làm -> Hiển thị nút xanh (Vào ca)
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Vào Ca';
+        btn.style.backgroundColor = '#2ecc71'; // Màu xanh lá
+        btn.title = "Bấm để bắt đầu ca làm việc";
+    }
+}
+
+// 5. Kiểm tra trạng thái khi tải trang
+async function checkAttendanceStatus() {
+    const btn = document.getElementById('navAttendanceBtn');
+    if (!btn) return; // Nếu không phải giao diện nhân viên thì thoát
+
+    try {
+        const myShifts = await apiCall('/shifts/my', 'GET');
+        // Tìm ca chưa có giờ kết thúc
+        const today = new Date().toISOString().split('T')[0];
+        const activeShift = myShifts.find(s => !s.gioKetThuc); // Bỏ check ngày nếu muốn ca qua đêm
+
+        if (activeShift) {
+            updateNavButtonState(true);
+        } else {
+            updateNavButtonState(false);
+        }
+    } catch (e) { 
+        console.log("Lỗi check trạng thái:", e);
+        btn.innerText = "Lỗi";
+    }
+}
+
+// Gọi ngay khi load trang
+checkAttendanceStatus();
+
+
+// 1. Cấu hình giờ chuẩn của các ca (Bạn có thể sửa giờ tại đây)
+const SHIFT_CONFIG = {
+    'Ca Sáng':  { start: 7,  end: 12 }, // 07:00 - 12:00
+    'Ca Chiều': { start: 12, end: 18 }, // 12:00 - 18:00
+    'Ca Tối':   { start: 18, end: 23 }  // 18:00 - 23:00
+};
+
+// 2. Hàm tải danh sách nhân viên vào dropdown lọc
+async function loadEmployeeFilter() {
+    try {
+        const staffList = await apiCall('/users', 'GET');
+        const select = document.getElementById('filterEmployee');
+        // Giữ lại option đầu tiên (Tất cả)
+        select.innerHTML = '<option value="all">-- Tất cả nhân viên --</option>';
+        
+        staffList.forEach(staff => {
+            select.innerHTML += `<option value="${staff.maNV}">${staff.tenNV} (${staff.vaiTro})</option>`;
+        });
+    } catch (e) { console.error(e); }
+}
+
+// 3. Hàm chính: Tải và Phân tích dữ liệu chấm công
+async function loadAttendanceReport() {
+    const filterNvId = document.getElementById('filterEmployee').value;
+    const fromDate = document.getElementById('filterFromDate').value;
+    const toDate = document.getElementById('filterToDate').value;
+
+    try {
+        // Lấy toàn bộ lịch làm việc (hoặc API filter nếu backend hỗ trợ)
+        // Ở đây giả sử lấy hết rồi filter client-side cho đơn giản
+        const shifts = await apiCall('/shifts', 'GET'); 
+
+        const tbody = document.getElementById('attendanceReportBody');
+        tbody.innerHTML = '';
+
+        // Lọc dữ liệu
+        const filteredShifts = shifts.filter(s => {
+            // Lọc theo nhân viên
+            if (filterNvId !== 'all' && s.maNV != filterNvId) return false;
+            
+            // Lọc theo ngày (Nếu có chọn)
+            if (fromDate && s.ngayLamViec < fromDate) return false;
+            if (toDate && s.ngayLamViec > toDate) return false;
+            
+            return true;
+        });
+
+        if (filteredShifts.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+            return;
+        }
+
+        // Duyệt và hiển thị
+        for (const shift of filteredShifts) {
+            // Lấy tên nhân viên (Giả sử API shifts trả về object NhanVien kèm theo, hoặc bạn cần map lại)
+            // Nếu API shifts chưa join bảng NhanVien, bạn có thể cần gọi thêm hoặc sửa Backend.
+            // Tạm thời giả định API trả về s.NhanVien.tenNV hoặc bạn dùng s.maNV
+            const staffName = shift.NhanVien ? shift.NhanVien.tenNV : `NV #${shift.maNV}`;
+            
+            // Phân tích giờ làm
+            const analysis = analyzeAttendance(shift);
+
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${new Date(shift.ngayLamViec).toLocaleDateString('vi-VN')}</td>
+                <td style="font-weight:bold;">${staffName}</td>
+                <td><span class="badge-shift">${shift.tenCa}</span></td>
+                <td>${formatTime(shift.gioBatDau)}</td>
+                <td>${formatTime(shift.gioKetThuc)}</td>
+                <td>${analysis}</td>
+            `;
+        }
+
+    } catch (error) {
+        console.error("Lỗi tải báo cáo:", error);
+    }
+}
+
+// 4. Hàm Logic: So sánh giờ để tìm lỗi đi muộn/về sớm
+function analyzeAttendance(shift) {
+    // Nếu chưa có giờ vào (Lỗi dữ liệu)
+    if (!shift.gioBatDau) return '<span style="color:gray;">Chưa Check-in</span>';
+
+    const config = SHIFT_CONFIG[shift.tenCa];
+    if (!config) return '<span style="color:blue;">Ca tùy chỉnh</span>'; // Không thuộc ca chuẩn
+
+    let statusHtml = '';
+    let isPerfect = true;
+
+    // --- CHECK ĐI MUỘN ---
+    // Lấy giờ phút vào thực tế
+    const inTime = new Date(shift.gioBatDau); 
+    // Lưu ý: Backend trả về string UTC hay Local? Cần xử lý cẩn thận.
+    // Giả sử inTime lấy ra đúng giờ Local.
+    
+    const inHour = inTime.getHours();
+    const inMinute = inTime.getMinutes();
+
+    // Quy đổi ra phút trong ngày để so sánh (VD: 7h30 = 7*60 + 30 = 450)
+    const actualInMinutes = inHour * 60 + inMinute;
+    const standardInMinutes = config.start * 60;
+    const lateThreshold = 15; // Cho phép trễ 15 phút
+
+    if (actualInMinutes > standardInMinutes + lateThreshold) {
+        const lateMins = actualInMinutes - standardInMinutes;
+        statusHtml += `<div style="color: red; font-size: 13px;">⚠️ Đi muộn ${lateMins}p</div>`;
+        isPerfect = false;
+    }
+
+    // --- CHECK VỀ SỚM ---
+    if (shift.gioKetThuc) {
+        const outTime = new Date(shift.gioKetThuc);
+        const outHour = outTime.getHours();
+        const outMinute = outTime.getMinutes();
+        
+        const actualOutMinutes = outHour * 60 + outMinute;
+        const standardOutMinutes = config.end * 60;
+        const earlyThreshold = 15; // Cho phép về sớm 15p
+
+        if (actualOutMinutes < standardOutMinutes - earlyThreshold) {
+             const earlyMins = standardOutMinutes - actualOutMinutes;
+             statusHtml += `<div style="color: orange; font-size: 13px;">⚠️ Về sớm ${earlyMins}p</div>`;
+             isPerfect = false;
+        }
+    } else {
+        // Chưa check-out
+        statusHtml += `<div style="color: gray; font-style: italic;">Đang làm việc...</div>`;
+        isPerfect = false;
+    }
+
+    if (isPerfect && shift.gioKetThuc) {
+        return `<span class="status-badge status-active">✅ Đúng giờ</span>`;
+    }
+
+    return statusHtml;
+}
+
+// Hàm phụ: Format giờ đẹp (HH:mm)
+function formatTime(dateString) {
+    if (!dateString) return '--:--';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+// Gọi khi trang tải xong
+loadEmployeeFilter();
+loadAttendanceReport();
+
+
+
 </script>
+<div id="editProductModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Cập nhật sản phẩm</h3>
+            <button class="close-btn" onclick="closeModal('editProductModal')">&times;</button>
+        </div>
+        
+        <input type="hidden" id="edit_maSP">
+
+        <div class="form-row">
+            <div style="flex: 1; margin-right: 10px;">
+                <label for="edit_tenSP" style="font-weight: bold; display: block; margin-bottom: 5px;">Tên sản phẩm</label>
+                <input type="text" class="form-control" id="edit_tenSP" style="width: 100%;">
+            </div>
+
+            <div style="flex: 1;">
+                <label for="edit_loai" style="font-weight: bold; display: block; margin-bottom: 5px;">Loại</label>
+                <select class="form-control" id="edit_loai" style="width: 100%;">
+                    <option value="DoUong">Đồ uống</option>
+                    <option value="ThucAn">Thức ăn</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div style="flex: 1;">
+                <label for="edit_gia" style="font-weight: bold; display: block; margin-bottom: 5px;">Giá bán (VNĐ)</label>
+                <input type="number" class="form-control" id="edit_gia" style="width: 100%;">
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="confirmEditProduct()" style="margin-top: 15px;">Lưu thay đổi</button>
+    </div>
+</div>
+
+<div id="editTableModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Đổi tên bàn</h3>
+            <button class="close-btn" onclick="closeModal('editTableModal')">&times;</button>
+        </div>
+        
+        <input type="hidden" id="editTableId">
+        
+        <div class="form-row">
+            <label style="font-weight: bold;">Tên bàn mới:</label>
+            <input type="text" class="form-control" id="editTableName" style="width: 100%;">
+        </div>
+        
+        <button class="btn btn-primary" onclick="handleUpdateTable()" style="margin-top: 15px;">Lưu thay đổi</button>
+    </div>
+</div>
 </body>
 </html>

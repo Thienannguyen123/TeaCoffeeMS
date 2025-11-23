@@ -17,7 +17,9 @@ const NhanVien = sequelize.define("NhanVien", {
   caLamViec: { type: DataTypes.STRING, allowNull: true }
 }, {
   tableName: "NhanVien",
-  timestamps: false
+    timestamps: true,  
+    createdAt: "createdAt",  
+    updatedAt: "updatedAt"
 });
 
 module.exports = NhanVien;

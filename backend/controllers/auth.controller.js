@@ -64,7 +64,7 @@ exports.login = async (req, res) => {
     // 3. Tạo Token
     const token = jwt.sign(
       { maNV: user.maNV, vaiTro: user.vaiTro },
-      process.env.JWT_SECRET || "secret_key",
+      process.env.JWT_SECRET || "change_this_secret",
       { expiresIn: "24h" }
     );
 
@@ -125,7 +125,7 @@ exports.googleLogin = async (req, res) => {
     // 4. Tạo Token JWT của hệ thống mình
     const token = jwt.sign(
         { maNV: user.maNV, vaiTro: user.vaiTro },
-        process.env.JWT_SECRET || "secret_key",
+        process.env.JWT_SECRET || "change_this_secret",
         { expiresIn: "24h" }
     );
 

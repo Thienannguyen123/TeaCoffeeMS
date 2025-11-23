@@ -93,22 +93,38 @@ exports.getRevenueByDate = async (req, res) => {
 // ===================================================================
 // 2) Sản phẩm bán chạy
 // ===================================================================
+// exports.getTopProducts cũ ... sửa thành:
+
 exports.getTopProducts = async (req, res) => {
   try {
     const top = parseInt(req.query.top) || 10;
+    const from = req.query.from;
+    const to = req.query.to;
+
+    let dateFilter = "";
+    const replacements = { top };
+
+    if (from && to) {
+      // SỬA LỖI TẠI ĐÂY: Đổi dh.ngayTao thành dh.thoiGian
+      dateFilter = "WHERE CONVERT(date, dh.thoiGian) BETWEEN :from AND :to";
+      replacements.from = from;
+      replacements.to = to;
+    }
 
     const sql = `
       SELECT TOP(:top) ctdh.maSP,
              SUM(ctdh.soLuong) AS soLuongBan,
              sp.tenSP, sp.gia, sp.loai
       FROM ChiTietDonHang AS ctdh
+      JOIN DonHang AS dh ON ctdh.maDH = dh.maDH 
       LEFT JOIN SanPham AS sp ON ctdh.maSP = sp.maSP
+      ${dateFilter}
       GROUP BY ctdh.maSP, sp.tenSP, sp.gia, sp.loai
       ORDER BY SUM(ctdh.soLuong) DESC;
     `;
 
     const rows = await sequelize.query(sql, {
-      replacements: { top },
+      replacements: replacements,
       type: QueryTypes.SELECT
     });
 

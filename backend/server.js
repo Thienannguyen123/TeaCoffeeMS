@@ -42,7 +42,8 @@ app.get("/", (req, res) => res.send("TeaCoffeeMS Backend (MSSQL) is running"));
 (async () => {
   try {
     // Chú ý production: không dùng sync({ alter: true }) tự động
-    await sequelize.sync({ alter: false });
+    await sequelize.sync({ alter: false, force: false });
+
     console.log("✅ Database synchronized");
 
     // Nếu muốn tự động seed admin khi SEED_ADMIN=true

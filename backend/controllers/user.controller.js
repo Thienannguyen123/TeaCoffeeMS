@@ -123,3 +123,68 @@ exports.getProfile = async (req, res) => {
     return res.status(500).json({ message: "Lỗi lấy profile", error: err.message });
   }
 };
+
+
+// ==================== ĐẶT LẠI MẬT KHẨU NHÂN VIÊN (ADMIN) ====================
+exports.resetPassword = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await NhanVien.findByPk(id);
+    if (!user) return res.status(404).json({ message: "Không tìm thấy nhân viên" });
+
+    const defaultPassword = '123456';
+    const salt = await bcrypt.genSalt(10);
+    user.matKhau = await bcrypt.hash(defaultPassword, salt);
+
+    await user.save();
+
+    return res.json({ message: `Đặt lại mật khẩu thành công. Mật khẩu mới: ${defaultPassword}` });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Lỗi đặt lại mật khẩu", error: err.message });
+  }
+};
+
+
+// ==================== ĐỔI MẬT KHẨU (SELF) ====================
+exports.changePassword = async (req, res) => {
+  try {
+    const maNV = req.user.maNV;
+    const vaiTro = req.user.vaiTro;
+    const roleToCompare = vaiTro ? vaiTro.toLowerCase() : '';
+
+    console.log(`DEBUG: Vai trò gốc từ Token: [${vaiTro}]`);
+    console.log(`DEBUG: Vai trò so sánh (lowercase): [${roleToCompare}]`);
+
+    if (!['nhanvien', 'quanly', 'admin'].includes(roleToCompare)) {
+      console.log("Forbidden: Vai trò bị chặn.");
+      return res.status(403).json({ message: "Vai trò của bạn không được phép đổi mật khẩu." });
+     }
+
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ message: "Vui lòng điền đầy đủ thông tin" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "Mật khẩu mới và xác nhận mật khẩu không khớp" });
+    }
+
+    const user = await NhanVien.findByPk(maNV);
+    if (!user) return res.status(404).json({ message: "Người dùng không tồn tại" });
+
+    const isMatch = await bcrypt.compare(oldPassword, user.matKhau);
+    if (!isMatch) return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
+
+    const salt = await bcrypt.genSalt(10);
+    user.matKhau = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    return res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Lỗi đổi mật khẩu", error: err.message });
+  }
+};
+
+

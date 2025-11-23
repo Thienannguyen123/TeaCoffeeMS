@@ -9,8 +9,8 @@ const Ban = sequelize.define("Ban", {
   trangThai: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: "Trong", // 'trong', 'dang_phuc_vu', 'dat_truoc'
-    validate: { isIn: [["Trong", "DangPhucVu", "DaDatTruoc"]] }
+    defaultValue: "Trong", // 'trong', 'dang_phuc_vu'
+    validate: { isIn: [["Trong", "DangPhucVu"]] }
   }
 }, {
   tableName: "Ban",
